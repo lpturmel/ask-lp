@@ -46,15 +46,10 @@ impl EventHandler for Handler {
         let user = msg.author.clone();
 
         if !is_question {
-            info!("User did not ask a question, ignoring message");
             return;
         }
         let reply = format!("<@{}> [ask lp](https://ask-lp.com)", user.id);
-        info!(
-            "Found a question from user {}",
-            user.global_name.unwrap_or(user.name)
-        );
-        info!("Replying to user with link to ask-lp: {}", reply);
+
         msg.channel_id.say(ctx, reply).await.ok();
     }
 }
