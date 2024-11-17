@@ -1,0 +1,55 @@
+{% extends "app_nav.html" %}
+
+{% block title %}New Question | Ask LP{% endblock %}
+
+{% block app_content %}
+<div class="container flex flex-col max-w-2xl mx-auto">
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold">New Question</h1>
+        <a href="/app" class="btn btn-ghost">Back</a>
+    </div>
+    <div class="flex flex-col gap-2">
+        <form action="/app/question/submit" method="post">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Title <span class="text-red-500 font-semibold">*</span></span>
+                </label>
+                <input type="text" name="title" class="input input-bordered" required minlength="5" maxlength="100">
+            </div>
+            <div class="form-control">
+
+                <label class="form-control">
+                  <div class="label">
+                    <span class="label-text">Body</span>
+                    <span class="label-text-alt badge badge-neutral">Optional</span>
+                  </div>
+                  <textarea class="textarea textarea-bordered" name="body" maxlength="1000"></textarea>
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Public <span class="text-red-500 font-semibold">*</span></span>
+                </label>
+                <div class="flex items-center gap-2">
+                    <input type="radio" name="public" value="true" class="radio">
+                    <label class="label flex flex-col items-start justify-center">
+                        <span class="label-text">Yes</span>
+                            
+                        <span class="label-text-alt text-gray-500">Question will be visible to everyone</span>
+                    </label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="radio" name="public" value="false" class="radio" required>
+                    <label class="label flex flex-col items-start justify-center">
+                        <span class="label-text">No</span>
+                            
+                        <span class="label-text-alt text-gray-500">Question will be hidden from everyone</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-control">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock app_content %}

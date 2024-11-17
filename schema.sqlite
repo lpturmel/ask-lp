@@ -1,0 +1,58 @@
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE User (
+    id TEXT PRIMARY KEY,
+    username TEXT NOT NULL,
+    discriminator TEXT NOT NULL,
+    avatar TEXT,
+    is_admin BOOLEAN NOT NULL CHECK (is_admin IN (0, 1)),
+    joined_at DATETIME NOT NULL,
+    daily_questions INTEGER NOT NULL DEFAULT 0,
+    last_question_reset DATE
+);
+
+CREATE TABLE Session (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    access_token TEXT NOT NULL,
+    access_token_nonce TEXT NOT NULL,
+    refresh_token TEXT NOT NULL,
+    refresh_token_nonce TEXT NOT NULL,
+    expires_at DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES User(id)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+
+CREATE TABLE Question (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    public BOOLEAN NOT NULL CHECK (public IN (0, 1)),
+    created_at DATETIME NOT NULL,
+    user_id TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES User(id)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+CREATE TABLE Answer (
+    id TEXT PRIMARY KEY,
+    body TEXT NOT NULL,
+    created_at DATETIME NOT NULL,
+    user_id TEXT NOT NULL,
+    question_id TEXT NOT NULL,
+    FOREIGN KEY (question_id) REFERENCES Question(id)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION,
+    FOREIGN KEY (user_id) REFERENCES User(id)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+);
+
+CREATE INDEX idx_question_user_id ON Question(user_id);
+CREATE INDEX idx_question_created_at ON Question(created_at);
+CREATE INDEX idx_session_user_id ON Session(user_id);
+CREATE INDEX idx_answer_user_id ON Answer(user_id);
+CREATE INDEX idx_answer_question_id ON Answer(question_id);

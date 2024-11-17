@@ -1,0 +1,70 @@
+<!-- templates/app.html -->
+{% extends "app_nav.html" %}
+
+{% block title %}Your Questions | Ask LP{% endblock %}
+
+{% block app_content %}
+<div class="container flex flex-col max-w-2xl mx-auto gap-4 h-full">
+    <div class="flex justify-between items-center">
+        <div class="flex justify-start items-center gap-4">
+            <h1 class="text-3xl font-bold">{% if user.is_admin %}{% else %}Your{% endif %} Questions</h1>
+            {% if !user.is_admin %}
+                <p class="text-gray-500 text-sm">
+                    You have {{ remaining }} questions remaining out of {{ user_limit }}
+                </p>
+            {% endif %}
+        </div>
+        {% if !user.is_admin %}
+            <a href="/app/question/new" class="btn btn-sm btn-primary" {% if remaining == 0 %}disabled{% endif %}>Ask</a>
+        {% endif %}
+    </div>
+    <div class="flex flex-col gap-2 pb-4 w-full">
+        {% if q_count == 0 %}
+            <div class="rounded-md bg-base-100 p-4 text-center">
+                <h2 class="text-2xl font-bold">No questions</h2>
+                <p class="text-gray-500">{% if user.is_admin %} Waiting for questions... {% else %} Ask a question to get started {% endif %}</p>
+            </div>
+        {% endif %}
+        
+        {% for question in questions %}
+        <div class="relative">
+            {% if question.answered %}
+                <div class="collapse collapse-arrow rounded-md bg-base-200 rounded-md">
+                    <input type="radio" name="question">
+                    <div class="collapse-title">
+                        {% include "app/question.html" %}
+                    </div>
+                    <div class="collapse-content overflow-auto">
+                        <div role="alert" class="alert shadow-lg border border-success">
+                             <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6 shrink-0 stroke-current text-success"
+                                fill="none"
+                                viewBox="0 0 24 24">
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            <div>
+                                <h3>{{ question.answer_body.clone().unwrap_or_default() }} </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="p-4 bg-base-200 rounded-md">
+                    {% include "app/question.html" %}
+                </div>
+            {% endif %}
+
+            {% if user.is_admin %}
+                <a href="/app/question/{{ question.question_id }}/answer" class="btn btn-xs btn-accent absolute right-2 bottom-2">Answer</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div
+{% endblock app_content %}
+

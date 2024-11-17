@@ -1,0 +1,21 @@
+<!-- templates/app_nav.html -->
+{% extends "base.html" %}
+
+{% block title %} {{ title }} {% endblock title %}
+
+{% block content %}
+<div class="container flex flex-col max-w-2xl pt-20 mx-auto">
+    <div class="flex justify-between items-center bg-base-200 rounded-md p-4">
+        <div class="flex gap-4 items-center">
+            <img src="{{ image_url }}" alt="{{ user.username }}" class="w-20 h-20 rounded-full">
+            <p class="text-xl semibold-bold"> Welcome back, <span class="font-bold"> {{ user.username }} </span> </p>
+        </div>
+        <a href="/logout" class="btn btn-ghost">Logout</a>
+    </div>
+
+    <div class="divider"></div>
+
+    {% block app_content %}{% endblock app_content %}
+</div>
+{% endblock content %}
+

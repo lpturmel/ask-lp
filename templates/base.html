@@ -1,0 +1,17 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=devide-width, initial-scale=1.0" />
+    <meta name="description" content="Ask questions to LP" />
+    <link rel="stylesheet" href="/static/output.css" />
+    <title>{% block title %} Ask LP {% endblock %}</title>
+    {% block head %}{% endblock %}
+</head>
+    <body>
+        <div id="content">
+            {% block content %}<p>Placeholder content</p>{% endblock %}
+        </div>
+    </body>
+</html>

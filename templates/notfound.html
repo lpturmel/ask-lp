@@ -1,0 +1,14 @@
+<!-- templates/notfound.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container max-w-2xl pt-20 mx-auto">
+    <div class="container w-full flex flex-col h-full rounded-md pt-20 max-w-lg mx-auto">
+        <div class="w-full flex flex-col gap-8 bg-base-200 rounded-md p-8 max-w-lg mx-auto">
+            <h2 class="text-3xl font-bold w-full text-center"> Page not found</h2>
+            <p class="text-gray-500">{{ message }}</p>
+            <a href="/" class="btn btn-primary">Go back home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

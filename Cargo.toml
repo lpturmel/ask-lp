@@ -1,0 +1,29 @@
+[package]
+name = "asklp"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+askama = { version = "0.12.1", features = ["with-axum"] }
+askama_axum = "0.4.0"
+axum = "0.7.7"
+axum-extra = { version = "0.9.4", features = ["typed-header"] }
+chrono = { version = "0.4.38", features = ["serde"] }
+chrono-tz = "0.10.0"
+dotenv = "0.15.0"
+futures = "0.3.31"
+jsonwebtoken = "9.3.0"
+libsql = "0.6.0"
+oauth2 = "4.4.2"
+reqwest = { version = "0.12.9", features = ["json"] }
+serde = { version = "1.0.215", features = ["derive"] }
+serde_json = "1.0.132"
+tokio = { version = "1.41.1", features = ["rt-multi-thread", "macros"] }
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
+uuid = { version = "1.11.0", features = ["v4", "serde"] }
+openssl = { version = "0.10.68", features = ["vendored"] }
+serenity = { version = "0.12.2", features = ["client", "gateway", "rustls_backend", "model", "chrono"] }
+tower-http = { version = "0.6.1", features = ["fs", "trace", "compression-full"] }
+aes-gcm = "0.10.3"
+hex = "0.4.3"
