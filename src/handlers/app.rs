@@ -1,6 +1,7 @@
 use crate::{
     db,
     error::{Error, Result},
+    twilio::send_sms,
     AppTemplate, DISCORD_AVATAR_URL,
 };
 use crate::{AppState, NewQuestionTemplate};
@@ -130,13 +131,19 @@ pub async fn submit_question(
     if (questions.len() as u64) < daily_limit {
         let question = db::Question {
             id: uuid::Uuid::new_v4().to_string(),
-            title,
+            title: title.clone(),
             body,
             public,
             created_at: chrono::Utc::now(),
             user_id: user.id.clone(),
         };
         state.db.create_question(question).await?;
+
+        let _ = send_sms(
+            &state.http,
+            &format!("Question submitted by {}: {}", user.username, title),
+        )
+        .await;
     }
 
     Ok(Redirect::to("/app"))
