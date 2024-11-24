@@ -3,8 +3,10 @@ use askama::Template;
 use axum::{extract::State, middleware, response::IntoResponse, routing, Json, Router};
 use bot::Handler;
 use error::Result;
+use governor::Quota;
 use handlers::app::QuestionUser;
 use libsql::Builder;
+use nonzero_ext::nonzero;
 use oauth2::basic::BasicClient;
 use serenity::all::{ActivityData, OnlineStatus};
 use serenity::{all::GatewayIntents, Client};
@@ -14,6 +16,8 @@ use tokio::net::TcpListener;
 use tower_http::compression::CompressionLayer;
 use tower_http::services::ServeDir;
 use tracing::{error, info};
+
+use self::mw::RateLimiterLayer;
 
 mod auth;
 mod bot;
@@ -115,6 +119,10 @@ async fn main() {
         .nest_service("/", ServeDir::new("static"))
         .layer(CompressionLayer::new());
 
+    let global_quota = Quota::per_minute(nonzero!(60u32));
+
+    let limiter = RateLimiterLayer::new(global_quota);
+
     let app = Router::new()
         .route("/ping", routing::get(ping))
         .route("/", routing::get(index))
@@ -133,10 +141,16 @@ async fn main() {
         .nest("/static", static_router)
         .fallback(not_found)
         .layer(middleware::from_fn_with_state(state.clone(), mw::auth))
+        .layer(limiter)
         .with_state(state.clone());
 
     let listener = TcpListener::bind(addr).await.unwrap();
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await
+    .unwrap();
 }
 
 async fn ping() -> &'static str {

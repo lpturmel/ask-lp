@@ -27,3 +27,6 @@ serenity = { version = "0.12.2", features = ["client", "gateway", "rustls_backen
 tower-http = { version = "0.6.1", features = ["fs", "trace", "compression-full"] }
 aes-gcm = "0.10.3"
 hex = "0.4.3"
+tower = "0.5.1"
+governor = "0.6.3"
+nonzero_ext = "0.3.0"
